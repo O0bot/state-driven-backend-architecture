@@ -1,8 +1,13 @@
 using MyProjectMaybe.Infrastructure;
+using MyProjectMaybe.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IUploadStore, InMemoryUploadStore>();
+
+builder.Services.AddHostedService<ValidationWorker>();
+
+builder.Services.AddHostedService<ProcessingWorker>();
 
 var app = builder.Build();
 
