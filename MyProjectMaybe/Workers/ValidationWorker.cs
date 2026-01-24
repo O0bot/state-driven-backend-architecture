@@ -27,7 +27,10 @@ namespace MyProjectMaybe.Workers
             var store = scope.ServiceProvider.GetRequiredService<IUploadStore>();
 
             var pending = store.GetAll()
-                .Where(u => u.State == UploadState.Created)
+                .Where(u =>
+                        u.State == UploadState.Created ||
+                        (u.State == UploadState.Validating &&
+                        u.StateStartedAt < DateTime.UtcNow.AddSeconds(-30)))
                 .ToList();
 
             foreach (var upload in pending)
