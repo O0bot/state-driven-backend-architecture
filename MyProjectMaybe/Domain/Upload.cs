@@ -6,4 +6,5 @@ public class Upload
     public UploadState State { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime? StateStartedAt { get; set; }
+    public bool IsProcessed { get; set; }
 }

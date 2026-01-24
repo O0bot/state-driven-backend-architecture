@@ -32,6 +32,13 @@ namespace MyProjectMaybe.Workers
 
             foreach (var upload in pending)
             {
+                // If side effects already happened, just finalize
+                if (upload.IsProcessed)
+                {
+                    upload.State = UploadState.Completed;
+                    continue;
+                }
+
                 upload.State = UploadState.Processing;
 
                 try
@@ -39,11 +46,13 @@ namespace MyProjectMaybe.Workers
                     // Simulate irreversible work
                     await Task.Delay(1000, token);
 
+                    upload.IsProcessed = true;
                     upload.State = UploadState.Completed;
                 }
                 catch
                 {
-                    upload.State = UploadState.Failed;
+                    // Do NOTHING
+                    // Leave state as Processing so lease logic can retry
                 }
             }
 
